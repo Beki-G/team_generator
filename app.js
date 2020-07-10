@@ -10,7 +10,82 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const question = [
+    {
+        name:"EmployeeType",
+        message:"What type of Team Member would you like to add?",
+        type:"list",
+        choices:[ "Manager", "Engineer", "Intern", "Team Complete"]
+    }
+];
 
+const employeeQuestion=[{
+    name:"name",
+    message:"What is the thier name?",
+    type:"input"
+},
+{
+    name:"id",
+    message:"What is the their Employee ID?",
+    type:"input"
+},
+{
+    name:"email",
+    message: "What is their email? "
+}];
+
+const questionByEmployeeType={
+    Manager: {    
+        name:"email",
+        message:"What is the manager's office number?",
+        type:"input"
+    },
+    Engineer: {
+        name:"github",
+        message: "What is engineers github?",
+        type:"input"
+    },
+    Intern:{
+        name:"school",
+        message:"What is the intern's school?",
+        type:"input"
+    }
+}
+
+const teamArr =[];
+
+function getNewMemberQuestions(memberType){
+    //reset employee question to original length
+    employeeQuestion.length = 3
+
+    //get the correct question to ask for the new team memember type
+    const memberQuestion = questionByEmployeeType[memberType];
+
+    //add to employee questions
+    employeeQuestion.push(memberQuestion);
+    return(employeeQuestion)
+    
+}
+
+
+async function initiateTeam(){
+    const {EmployeeType} = await inquirer.prompt(question) 
+    console.log(EmployeeType)
+
+    switch (EmployeeType){
+    case "Team Complete":
+        console.log("Team is complete congrats!")
+        break;
+
+    default:
+        console.log(`You've chosen to add a(n) ${EmployeeType} to your team`);
+        const memberQuestions = getNewMemberQuestions(EmployeeType);
+        const newMemberInfo = await inquirer.prompt(memberQuestions);
+        console.log(newMemberInfo)
+        initiateTeam();
+        break;
+    }
+}
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -33,3 +108,5 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+initiateTeam();

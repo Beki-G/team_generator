@@ -16,10 +16,10 @@
   },
   "author": "beki-g",
   "license": "ISC",
-  "bugs": {
-  },
+  "bugs": {},
   "dependencies": {
-    "inquirer": "^6.3.1"
+    "inquirer": "^6.3.1",
+    "rejs": "^0.8.1"
   },
   "devDependencies": {
     "jest": "^24.8.0"
