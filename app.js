@@ -58,7 +58,6 @@ function getNewMemberQuestions(memberType){
     //reset employee question to original length
     employeeQuestion.length = 3
 
-    //get the correct question to ask for the new team memember type
     const memberQuestion = questionByEmployeeType[memberType];
 
     //add to employee questions
@@ -89,15 +88,24 @@ function createNewMember(memberInfo, memberType){
     return newMember;
 }
 
+function renderTeamHTML(teamArr){
+    const teamHTML = render(teamArr);
+    !fs.existsSync(OUTPUT_DIR) && fs.mkdirSync(OUTPUT_DIR);
+    fs.writeFile(outputPath, teamHTML, err=>{
+        if (err){
+            console.log(err);
+        }
+    })
+
+}
+
 async function initiateTeam(){
     const {EmployeeType} = await inquirer.prompt(question) 
     console.log(EmployeeType)
 
     switch (EmployeeType){
     case "Team Complete":
-        console.log("=====================================");
-        console.log("Here is your new team info!");
-        console.log(teamArr)
+        renderTeamHTML(teamArr);
         break;
 
     default:
@@ -105,7 +113,7 @@ async function initiateTeam(){
         const memberQuestions = getNewMemberQuestions(EmployeeType);
         const memberInformation = await inquirer.prompt(memberQuestions);
         const newMember = createNewMember(memberInformation, EmployeeType)
-        console.log(newMember)
+        teamArr.push(newMember)
         console.log("-------------------------------------")
         initiateTeam();
         break;
