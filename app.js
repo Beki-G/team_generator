@@ -36,7 +36,7 @@ const employeeQuestion=[{
 
 const questionByEmployeeType={
     Manager: {    
-        name:"email",
+        name:"officeNum",
         message:"What is the manager's office number?",
         type:"input"
     },
@@ -67,6 +67,27 @@ function getNewMemberQuestions(memberType){
     
 }
 
+function createNewMember(memberInfo, memberType){
+    let newMember;
+    const {name, id, email} = memberInfo;
+
+    switch(memberType){
+        case "Manager":
+            const {officeNum} = memberInfo;
+            newMember = new Manager(name, id, email, officeNum);
+            break;
+        case "Engineer":
+            const {github} = memberInfo;
+            newMember = new Engineer(name, id, email, github);
+            break;
+        case "Intern":
+            const {school}=  memberInfo;
+            newMember = new Intern(name, id, email, school)
+            break;
+    }
+
+    return newMember;
+}
 
 async function initiateTeam(){
     const {EmployeeType} = await inquirer.prompt(question) 
@@ -74,14 +95,18 @@ async function initiateTeam(){
 
     switch (EmployeeType){
     case "Team Complete":
-        console.log("Team is complete congrats!")
+        console.log("=====================================");
+        console.log("Here is your new team info!");
+        console.log(teamArr)
         break;
 
     default:
         console.log(`You've chosen to add a(n) ${EmployeeType} to your team`);
         const memberQuestions = getNewMemberQuestions(EmployeeType);
-        const newMemberInfo = await inquirer.prompt(memberQuestions);
-        console.log(newMemberInfo)
+        const memberInformation = await inquirer.prompt(memberQuestions);
+        const newMember = createNewMember(memberInformation, EmployeeType)
+        console.log(newMember)
+        console.log("-------------------------------------")
         initiateTeam();
         break;
     }
